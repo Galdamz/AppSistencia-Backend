@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('assistances', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('meeting_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
             $table->foreign("meeting_id")->references("id")->on("meetings");
             $table->foreign("user_id")->references("id")->on("users");
             $table->timestamp('registered_date')->useCurrent();
