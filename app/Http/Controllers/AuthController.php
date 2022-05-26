@@ -20,7 +20,7 @@ class AuthController extends Controller
             "uid" => ["nullable", "string", "min:2"],
             "password" => ["required", "string", "min:8"],
             "email" => ["required", "string", "unique:users,email"],
-            "role" => ["required", "string", "integer"]
+            "role_id" => ["required", "string", "integer"]
         ]);
 
         // if ($fields["role"] === 1 && $role_id === 1) {
@@ -35,10 +35,10 @@ class AuthController extends Controller
         $user = User::create([
             "first_name" => $fields["first_name"],
             "last_name" => $fields["last_name"],
-            "uid" => $fields["uid"],
+            "uid" => isset($fields["uid"]) ? $fields["uid"] : null,
             "email" => $fields["email"],
             "password" => bcrypt($fields["password"]),
-            "role" => $fields["role"],
+            "role_id" => $fields["role_id"],
         ]);
 
         $token = $user->createToken("x-access-token")->plainTextToken;
