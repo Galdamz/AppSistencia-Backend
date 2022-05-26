@@ -17,6 +17,7 @@ class AuthController extends Controller
         $fields = $request->validate([
             "first_name" => ["required", "string", "min:2"],
             "last_name" => ["required", "string", "min:2"],
+            "uid" => ["nullable", "string", "min:2"],
             "password" => ["required", "string", "min:8"],
             "email" => ["required", "string", "unique:users,email"],
             "role" => ["required", "string", "integer"]
@@ -31,7 +32,15 @@ class AuthController extends Controller
 
         // }
 
-        $user = User::create($fields);
+        $user = User::create([
+            "first_name" => $fields["first_name"],
+            "last_name" => $fields["last_name"],
+            "uid" => $fields["uid"],
+            "email" => $fields["email"],
+            "password" => bcrypt($fields["password"]),
+            "role" => $fields["role"],
+        ]);
+
         $token = $user->createToken("x-access-token")->plainTextToken;
 
         $response = [
@@ -53,7 +62,7 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($fields["password"], $user->password)) {
             return response([
-                "message" => "Bad Credential"
+                "message" => "Bad Credentials"
             ], 401);
         }
         $token = $user->createToken("x-access-token")->plainTextToken;
