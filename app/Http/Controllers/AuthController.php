@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+class AuthController extends Controller
+{
+
+    public function register(Request $request)
+    {
+        // $role_id = Auth::user()->role_id;
+
+        $fields = $request->validate([
+            "first_name" => ["required", "string", "min:2"],
+            "last_name" => ["required", "string", "min:2"],
+            "password" => ["required", "string", "min:8"],
+            "email" => ["required", "string", "unique:users,email"],
+            "role" => ["required", "string", "integer"]
+        ]);
+
+        // if ($fields["role"] === 1 && $role_id === 1) {
+        //     return response([
+        //         "message" => "Oh No... I't Looks like you can't do that."
+        //     ], 403);
+
+        // } else {
+
+        // }
+
+        $user = User::create($fields);
+        $token = $user->createToken("x-access-token")->plainTextToken;
+
+        $response = [
+            "user" => $user,
+            "x-access-token" => $token
+        ];
+
+        return response($response, 201);
+    }
+
+    public function login(Request $request)
+    {
+        $fields = $request->validate([
+            "email" => "required|string",
+            "password" => "required"
+        ]);
+
+        $user = User::where("email", $fields["email"])->first();
+
+        if (!$user || !Hash::check($fields["password"], $user->password)) {
+            return response([
+                "message" => "Bad Credential"
+            ], 401);
+        }
+        $token = $user->createToken("x-access-token")->plainTextToken;
+
+        $response = [
+            "user" => $user,
+            "x-access-token" => $token,
+        ];
+
+        return response($response, 200);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return (["message" => "Logged-out"]);
+    }
+}
