@@ -18,7 +18,7 @@ class AuthController extends Controller
             "first_name" => ["required", "string", "min:2"],
             "last_name" => ["required", "string", "min:2"],
             "uid" => ["nullable", "string", "min:2"],
-            "password" => ["required", "string", "min:8"],
+            "password" => ["required", "string", "min:8", "confirmed"],
             "email" => ["required", "string", "unique:users,email"],
             "role_id" => ["required", "string", "integer"]
         ]);
