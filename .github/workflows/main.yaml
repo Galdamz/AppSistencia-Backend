@@ -47,6 +47,8 @@ jobs:
         -w /var/www/html \
         laravelsail/php81-composer:latest \
         composer install --ignore-platform-reqs
+    - name: Log
+      run: ls
   start:
     needs: build
     runs-on: self-hosted
