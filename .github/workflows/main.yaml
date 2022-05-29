@@ -43,10 +43,6 @@ jobs:
       run: mv .env.example .env
     - name: Copy App Key
       run: echo APP_KEY=${{ secrets.APP_KEY }} >> .env
-    - name: Run Migrations
-      run: ./vendor/bin/sail artisan migrate
-    - name: Run Seeders
-      run: ./vendor/bin/sail artisan db:seed
     - name: Install Depedencies
       run: |
         docker run --rm \
@@ -55,5 +51,9 @@ jobs:
         -w /var/www/html \
         laravelsail/php81-composer:latest \
         composer install --ignore-platform-reqs
+    - name: Run Migrations
+      run: ./vendor/bin/sail artisan migrate
+    - name: Run Seeders
+      run: ./vendor/bin/sail artisan db:seed
     - name: Start Project :D
       run: ./vendor/bin/sail up -d
