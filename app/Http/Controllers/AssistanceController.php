@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assistance;
 use App\Models\Meeting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -14,9 +15,11 @@ class AssistanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-        //
+        $id = Auth::user()->id;
+
     }
 
     /**
@@ -25,6 +28,7 @@ class AssistanceController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
 
@@ -35,8 +39,18 @@ class AssistanceController extends Controller
         ]);
 
         $role_id = Auth::user()->role_id;
+        $id = Auth::user()->id;
 
-        Meeting::where("secret_code", $fields["secret_code"])->where("course_id", $fields["course_id"])->firstOrFail();
+
+        $isAlreadyRegistered = Assistance::where("user_id", $id);
+
+        if($isAlreadyRegistered){
+            return response([
+                "error" => "You are already registered"
+            ], 403);
+        }
+
+        $validMeeting = Meeting::where("secret_code", $fields["secret_code"])->where("course_id", $fields["course_id"])->firstOrFail();
 
         if ($role_id !== 3) {
             return response([
@@ -45,8 +59,28 @@ class AssistanceController extends Controller
             ], 403);
         }
 
-        $currentDate = Carbon::now();
+        $currentTime = Carbon::now()->format('H:i:s');
+        $parsedTime = Carbon::parse($validMeeting["finish_time"])->format('H:i:s');
 
+        $isOnTime = $parsedTime < $currentTime;
+
+
+        if(!$isOnTime){
+            return response([
+                "message"=> "Too late...",
+                "currentTime" => $currentTime,
+                "expectedTime" => $parsedTime,
+                "isOnTime" => $isOnTime
+            ]);
+        }else{
+            $assistance = Assistance::create([
+                "meeting_id"=> $fields["meeting_id"],
+                "user_id"=> $id,
+                "registered_date"=> Carbon::now()
+            ]);
+
+            return response($assistance, 201);
+        }
 
     }
 
