@@ -27,9 +27,10 @@ jobs:
         -w /var/www/html \
         laravelsail/php81-composer:latest \
         composer install --ignore-platform-reqs
+    - name: Start Project :D
+      run: ./vendor/bin/sail up -d
     - name: Run Migrations
       run: ./vendor/bin/sail artisan migrate:refresh
     - name: Run Seeders
       run: ./vendor/bin/sail artisan db:seed
-    - name: Start Project :D
-      run: ./vendor/bin/sail up -d
+
