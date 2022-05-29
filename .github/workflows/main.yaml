@@ -40,10 +40,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install Depedencies
-      run: docker run --rm \  -u "$(id -u):$(id -g)" \ -v $(pwd):/var/www/html \ -w /var/www/html \ laravelsail/php81-composer:latest \ composer install --ignore-platform-reqs
+      run: echo 'Dependencies (?'
   start:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
       - name: Start Project
         run: sail up -d
+
+
