@@ -2,23 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Meeting;
 use Illuminate\Http\Request;
-use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
 
-class CourseController extends Controller
+class MeetingController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-    public function index()
+    public function index(Request $request)
     {
-
         $role_id = Auth::user()->role_id;
-        $id = Auth::user()->id;
+
+        $fields = $request->validate([
+            "course_id" => ["required", "integer"],
+        ]);
+
+        // $fields = $request->validate([
+        //     "course_id" => ["required", "integer"],
+        //     "secret_code" => ["required", "string", "min:8"],
+        //     "finish_time" => ["required", "time"],
+        // ]);
 
         if ($role_id !== 2) {
             return response([
@@ -27,7 +35,7 @@ class CourseController extends Controller
             ], 403);
         }
 
-        $response = Course::where('professor_id', $id)->with('meetings')->get();
+        $response = Meeting::all()->where('course_id', $fields["course_id"]);
         return response($response, 200);
     }
 
@@ -37,11 +45,15 @@ class CourseController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
     public function store(Request $request)
     {
-        $id = Auth::user()->id;
         $role_id = Auth::user()->role_id;
+
+        $fields = $request->validate([
+            "course_id" => ["required", "integer"],
+            "secret_code" => ["required", "string", "min:8", "unique:meetings,secret_code"],
+            "finish_time" => ["required", "string"],
+        ]);
 
         if ($role_id !== 2) {
             return response([
@@ -50,18 +62,8 @@ class CourseController extends Controller
             ], 403);
         }
 
-        $fields = $request->validate([
-            "name" => ["required", "string", "min:3"],
-            "description" => ["required", "string", "min:4"],
-        ]);
-
-        $response = Course::create([
-            "name" => $fields["name"],
-            "description" => $fields["description"],
-            "professor_id" => $id
-        ]);
-
-        return response($response, 201);
+        $response = Meeting::create($fields);
+        return response($response, 200);
     }
 
     /**
@@ -70,10 +72,8 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
     public function show($id)
     {
-
         $role_id = Auth::user()->role_id;
 
         if ($role_id !== 2) {
@@ -83,7 +83,7 @@ class CourseController extends Controller
             ], 403);
         }
 
-        $response = Course::find($id)->with('meetings')->get();
+        $response = Meeting::find($id);
 
         return response($response);
     }
@@ -96,6 +96,7 @@ class CourseController extends Controller
      * @return \Illuminate\Http\Response
      */
 
+
     public function update(Request $request, $id)
     {
         $role_id = Auth::user()->role_id;
@@ -107,7 +108,7 @@ class CourseController extends Controller
             ], 403);
         }
 
-        $course = Course::find($id);
+        $course = Meeting::find($id);
         $course->update($request->all());
         return response($course, 200);
     }
@@ -118,7 +119,6 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
     public function destroy($id)
     {
         $role_id = Auth::user()->role_id;
@@ -131,6 +131,6 @@ class CourseController extends Controller
             ], 403);
         }
 
-        return Course::destroy($id);
+        return Meeting::destroy($id);
     }
 }
