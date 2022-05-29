@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
+
+    public function meetings(){
+        return $this->hasMany(Meeting::class);
+    }
+
     use HasFactory;
 
     /**
