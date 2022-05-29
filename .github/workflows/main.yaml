@@ -47,5 +47,5 @@ jobs:
         -w /var/www/html \
         laravelsail/php81-composer:latest \
         composer install --ignore-platform-reqs
-    - name: Start Project
+    - name: Start Project :D
       run: ./vendor/bin/sail up -d
