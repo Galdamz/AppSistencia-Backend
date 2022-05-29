@@ -46,6 +46,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Start Project
-        run: sail up -d
+        run: ./vendor/bin/sail up -d
 
 
