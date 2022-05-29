@@ -41,6 +41,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: .env File
       run: mv .env.example .env
+    - name: Copy App Key
+      run: echo API_KEY=${{ secrets.API_KEY }} >> .env
     - name: Install Depedencies
       run: |
         docker run --rm \
