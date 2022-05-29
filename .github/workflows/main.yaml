@@ -35,7 +35,7 @@ env:
   MIX_PUSHER_APP_CLUSTER: ${{secrets.MIX_PUSHER_APP_CLUSTER}}
 
 jobs:
-  build:
+  init:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
@@ -47,15 +47,5 @@ jobs:
         -w /var/www/html \
         laravelsail/php81-composer:latest \
         composer install --ignore-platform-reqs
-    - name: Log
-      run: ls
-  start:
-    needs: build
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v3
-      - name: Start Project
-        run: ./vendor/bin/sail up -d
-
-
-
+    - name: Start Project
+      run: ./vendor/bin/sail up -d
