@@ -17,7 +17,8 @@ class Meeting extends Model
     protected $fillable = [
         'secret_code',
         'start_date',
-        'finish_date'
+        'course_id',
+        'finish_time'
     ];
 
     /**

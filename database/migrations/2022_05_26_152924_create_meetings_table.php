@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('secret_code');
             $table->timestamp('start_date')->useCurrent();
-            $table->timestamp('finish_date')->useCurrent();
+            $table->bigInteger('course_id')->unsigned();
+            $table->foreign("course_id")->references("id")->on("courses");
+            $table->time('finish_time')->useCurrent();
             $table->timestamps();
         });
     }
