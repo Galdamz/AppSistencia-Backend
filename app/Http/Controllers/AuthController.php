@@ -41,11 +41,11 @@ class AuthController extends Controller
             "role_id" => $fields["role_id"],
         ]);
 
-        $token = $user->createToken("x-access-token")->plainTextToken;
+        $token = $user->createToken("x_access_token")->plainTextToken;
 
         $response = [
             "user" => $user,
-            "x-access-token" => $token
+            "x_access_token" => $token
         ];
 
         return response($response, 201);
@@ -65,11 +65,11 @@ class AuthController extends Controller
                 "message" => "Bad Credentials"
             ], 401);
         }
-        $token = $user->createToken("x-access-token")->plainTextToken;
+        $token = $user->createToken("x_access_token")->plainTextToken;
 
         $response = [
             "user" => $user,
-            "x-access-token" => $token,
+            "x_access_token" => $token,
         ];
 
         return response($response, 200);
