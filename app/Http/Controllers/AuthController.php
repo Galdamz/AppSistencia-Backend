@@ -44,7 +44,7 @@ class AuthController extends Controller
         $token = $user->createToken("x_access_token")->plainTextToken;
 
         $response = [
-            "user" => $user,
+            "role_id" => $user["role_id"],
             "x_access_token" => $token
         ];
 
@@ -68,7 +68,7 @@ class AuthController extends Controller
         $token = $user->createToken("x_access_token")->plainTextToken;
 
         $response = [
-            "user" => $user,
+            "role_id" => $user["role_id"],
             "x_access_token" => $token,
         ];
 
