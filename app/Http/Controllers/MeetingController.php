@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Meeting;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,6 +15,7 @@ class MeetingController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function index(Request $request)
     {
         $role_id = Auth::user()->role_id;
@@ -51,7 +53,7 @@ class MeetingController extends Controller
 
         $fields = $request->validate([
             "course_id" => ["required", "integer"],
-            "secret_code" => ["required", "string", "min:8", "unique:meetings,secret_code"],
+            "secret_code" => ["required", "string", "min:8", "max:16", "unique:meetings,secret_code"],
             "finish_time" => ["required", "string"],
         ]);
 
@@ -62,7 +64,12 @@ class MeetingController extends Controller
             ], 403);
         }
 
-        $response = Meeting::create($fields);
+        $response = Meeting::create([
+            "course_id" => $fields["course_id"],
+            "secret_code" => $fields["secret_code"],
+            "finish_time" => $fields["finish_time"],
+            "start_date" => Carbon::now()
+        ]);
         return response($response, 200);
     }
 
