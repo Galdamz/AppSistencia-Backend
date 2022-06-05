@@ -27,11 +27,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    
+
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
     Route::resource('/courses', CourseController::class);
     Route::resource('/meetings', MeetingController::class);
     Route::resource('/assistances', AssistanceController::class);
+    Route::post('/meetings/all', [MeetingController::class, 'index']);
 
 });
