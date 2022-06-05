@@ -20,7 +20,7 @@ class AuthController extends Controller
             "uid" => ["nullable", "string", "min:2"],
             "password" => ["required", "string", "min:8", "confirmed"],
             "email" => ["required", "string", "unique:users,email"],
-            "role_id" => ["required", "string", "integer"]
+            "role_id" => ["required", "integer"]
         ]);
 
         // if ($fields["role"] === 1 && $role_id === 1) {
