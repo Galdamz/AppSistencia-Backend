@@ -7,6 +7,7 @@ use App\Models\Meeting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Psy\Readline\Hoa\Console;
 
 class AssistanceController extends Controller
 {
@@ -33,24 +34,21 @@ class AssistanceController extends Controller
     {
 
         $fields = $request->validate([
-            "secret_code" => ["required", "string", "min:8"],
-            "meeting_id" => ["required", "integer"],
-            "course_id" => ["required", "integer"],
+            "secret_code" => ["required", "string", "min:8", "max:15"],
         ]);
 
         $role_id = Auth::user()->role_id;
         $id = Auth::user()->id;
 
+        $validMeeting = Meeting::where("secret_code", $fields["secret_code"])->firstOrFail();
 
-        $isAlreadyRegistered = Assistance::where("user_id", $id);
+        $isAlreadyRegistered = Assistance::where("user_id", $id)->get();
 
-        if($isAlreadyRegistered){
+        if(count($isAlreadyRegistered) >= 1){
             return response([
-                "error" => "You are already registered"
+                "error" => "You are already registered in this meeting!"
             ], 403);
         }
-
-        $validMeeting = Meeting::where("secret_code", $fields["secret_code"])->where("course_id", $fields["course_id"])->firstOrFail();
 
         if ($role_id !== 3) {
             return response([
@@ -62,8 +60,7 @@ class AssistanceController extends Controller
         $currentTime = Carbon::now()->format('H:i:s');
         $parsedTime = Carbon::parse($validMeeting["finish_time"])->format('H:i:s');
 
-        $isOnTime = $parsedTime < $currentTime;
-
+        $isOnTime = $parsedTime > $currentTime;
 
         if(!$isOnTime){
             return response([
@@ -74,7 +71,7 @@ class AssistanceController extends Controller
             ]);
         }else{
             $assistance = Assistance::create([
-                "meeting_id"=> $fields["meeting_id"],
+                "meeting_id"=>$validMeeting["id"],
                 "user_id"=> $id,
                 "registered_date"=> Carbon::now()
             ]);
