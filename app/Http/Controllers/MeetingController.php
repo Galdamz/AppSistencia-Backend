@@ -83,7 +83,7 @@ class MeetingController extends Controller
             ], 403);
         }
 
-        $response = Meeting::find($id);
+        $response = Meeting::with('assistances')->find($id);
 
         return response($response);
     }

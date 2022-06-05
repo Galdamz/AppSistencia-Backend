@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Meeting extends Model
 {
+
+    public function assistances(){
+        return $this->hasMany(Assistance::class);
+    }
+
     use HasFactory;
 
     /**
