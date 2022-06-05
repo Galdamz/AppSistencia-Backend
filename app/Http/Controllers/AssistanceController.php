@@ -76,7 +76,7 @@ class AssistanceController extends Controller
                 "registered_date"=> Carbon::now()
             ]);
 
-            return response($assistance, 201);
+            return response(["message"=>"You has been successfully adeded"], 201);
         }
 
     }
