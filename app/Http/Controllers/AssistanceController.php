@@ -20,7 +20,6 @@ class AssistanceController extends Controller
     public function index()
     {
         $id = Auth::user()->id;
-
     }
 
     /**
@@ -42,7 +41,7 @@ class AssistanceController extends Controller
 
         $validMeeting = Meeting::where("secret_code", $fields["secret_code"])->firstOrFail();
 
-        $isAlreadyRegistered = Assistance::where("user_id", $id)->get();
+        $isAlreadyRegistered = Assistance::where("user_id", $id)->where("meeting_id", $validMeeting["id"])->get();
 
         if(count($isAlreadyRegistered) >= 1){
             return response([

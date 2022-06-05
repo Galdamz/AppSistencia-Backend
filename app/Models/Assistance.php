@@ -10,8 +10,8 @@ use Laravel\Sanctum\HasApiTokens;
 class Assistance extends Model
 {
 
-    public function student(){
-        return $this->belongsTo(User::class);
+    public function students(){
+        return $this->hasMany(User::class);
     }
 
       use HasApiTokens, HasFactory, Notifiable;

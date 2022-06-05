@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assistance;
 use App\Models\Meeting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -90,9 +91,12 @@ class MeetingController extends Controller
             ], 403);
         }
 
-        $response = Meeting::with('assistances')->find($id);
+        // $response = Meeting::with('assistances')->find($id);
 
-        return response($response);
+        // return response($response);
+
+        $response =  Assistance::where("meeting_id", $id)->get();
+        return response($response, 200);
     }
 
     /**
