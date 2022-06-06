@@ -10,8 +10,8 @@ use Laravel\Sanctum\HasApiTokens;
 class Assistance extends Model
 {
 
-    public function students(){
-        return $this->hasMany(User::class);
+    public function student(){
+        return $this->belongsTo(User::class, 'user_id', 'id' );
     }
 
       use HasApiTokens, HasFactory, Notifiable;
@@ -33,6 +33,11 @@ class Assistance extends Model
      * @var array<int, string>
      */
     protected $hidden = [
+        'id',
+        'meeting_id',
+        'user_id',
+        'updated_at',
+        'created_at',
     ];
 
     /**

@@ -7,6 +7,7 @@ use App\Models\Meeting;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Expr\Assign;
 
 class MeetingController extends Controller
 {
@@ -91,11 +92,7 @@ class MeetingController extends Controller
             ], 403);
         }
 
-        // $response = Meeting::with('assistances')->find($id);
-
-        // return response($response);
-
-        $response =  Assistance::where("meeting_id", $id)->get();
+        $response =  Assistance::with('student:id,first_name,last_name,email')->where("meeting_id", $id)->get();
         return response($response, 200);
     }
 
