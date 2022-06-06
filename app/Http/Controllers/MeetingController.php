@@ -39,7 +39,7 @@ class MeetingController extends Controller
             ], 403);
         }
 
-        $response = Meeting::all()->where('course_id', $fields["course_id"]);
+        $response = Meeting::where('course_id', $fields["course_id"])->get();
         return response($response, 200);
     }
 
