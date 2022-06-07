@@ -67,7 +67,7 @@ class AssistanceController extends Controller
                 "currentTime" => $currentTime,
                 "expectedTime" => $parsedTime,
                 "isOnTime" => $isOnTime
-            ]);
+            ], 400);
         }else{
             $assistance = Assistance::create([
                 "meeting_id"=>$validMeeting["id"],
